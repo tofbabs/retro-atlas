@@ -1,0 +1,232 @@
+[
+  {
+    "id": "aws-s3-2017",
+    "title": "Amazon S3 US-EAST-1 Service Disruption",
+    "company": "Amazon Web Services",
+    "industry": "Cloud",
+    "category": "Operations",
+    "impact": "high",
+    "date": "2017-02-28",
+    "summary": "A maintenance command used during S3 billing troubleshooting removed more index and placement capacity than intended, causing a regional S3 outage and downstream service impact.",
+    "impactDetails": [
+      "GET/LIST/PUT/DELETE API impact in us-east-1",
+      "Dependent services including EC2 launch, EBS from snapshots, and Lambda affected",
+      "Prolonged recovery due to full restart and integrity checks on large subsystems"
+    ],
+    "learnings": [
+      "Add hard capacity floor guardrails to operational tooling",
+      "Partition critical subsystems to reduce restart blast radius",
+      "Design status tooling to avoid dependency on affected service"
+    ],
+    "sourceUrl": "https://aws.amazon.com/message/41926/",
+    "sourceLabel": "AWS summary",
+    "simulatorId": "sim-aws-s3-2017"
+  },
+  {
+    "id": "meta-backbone-2021",
+    "title": "Meta Global Backbone Outage",
+    "company": "Meta (Facebook)",
+    "industry": "Social",
+    "category": "Network",
+    "impact": "high",
+    "date": "2021-10-04",
+    "summary": "A backbone capacity command unintentionally disconnected data centers globally, withdrawing DNS-related BGP advertisements and making Meta services unreachable.",
+    "impactDetails": [
+      "Global unavailability of Facebook, Instagram, WhatsApp, and internal tooling",
+      "Loss of DNS reachability due to BGP withdrawal behavior",
+      "Recovery required physical access and controlled service ramp-up"
+    ],
+    "learnings": [
+      "Strengthen command audit and preflight validation in backbone workflows",
+      "Exercise recovery under full DNS and internal tool loss scenarios",
+      "Control service reintroduction to avoid secondary traffic surges"
+    ],
+    "sourceUrl": "https://engineering.fb.com/2021/10/05/networking-traffic/outage-details/",
+    "sourceLabel": "Meta engineering writeup",
+    "simulatorId": "sim-meta-backbone-2021"
+  },
+  {
+    "id": "fastly-global-2021",
+    "title": "Fastly Global Outage from Valid Configuration Trigger",
+    "company": "Fastly",
+    "industry": "CDN",
+    "category": "Configuration",
+    "impact": "high",
+    "date": "2021-06-08",
+    "summary": "A latent software bug in an earlier deployment was triggered by a valid customer configuration, resulting in widespread global errors.",
+    "impactDetails": [
+      "Large portions of edge network returned errors",
+      "Major customer websites and APIs became unavailable",
+      "Rapid identification and isolation restored most traffic quickly"
+    ],
+    "learnings": [
+      "Stress trigger-path testing for valid but rare configuration combinations",
+      "Isolate triggering configurations quickly and safely",
+      "Deploy permanent fix after immediate mitigation"
+    ],
+    "sourceUrl": "https://www.fastly.com/blog/summary-of-june-8-outage",
+    "sourceLabel": "Fastly incident summary",
+    "simulatorId": "sim-fastly-global-2021"
+  },
+  {
+    "id": "gitlab-db-2017",
+    "title": "GitLab Database Outage and Data Loss Event",
+    "company": "GitLab",
+    "industry": "Developer Tools",
+    "category": "Database",
+    "impact": "high",
+    "date": "2017-01-31",
+    "summary": "During ongoing database stress, an operator command was executed on the primary instead of the secondary, deleting substantial production data and forcing complex restoration.",
+    "impactDetails": [
+      "Extended platform outage",
+      "Data loss window despite partial recovery",
+      "Backup and recovery process gaps surfaced under stress"
+    ],
+    "learnings": [
+      "Harden primary/secondary safety checks on destructive commands",
+      "Continuously validate backup restorability in realistic drills",
+      "Document and rehearse high-pressure incident runbooks"
+    ],
+    "sourceUrl": "https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/",
+    "sourceLabel": "GitLab postmortem",
+    "simulatorId": "sim-gitlab-db-2017"
+  },
+  {
+    "id": "atlassian-sites-2022",
+    "title": "Atlassian Site Deletion Incident",
+    "company": "Atlassian",
+    "industry": "Developer Tools",
+    "category": "Automation",
+    "impact": "high",
+    "date": "2022-04-05",
+    "summary": "A script intended to remove a legacy app was run with site IDs instead of app IDs, deleting hundreds of customer cloud sites and requiring multi-day restoration.",
+    "impactDetails": [
+      "775 customers affected",
+      "Restoration lasted up to 14 days for some customers",
+      "Large-scale coordinated data and identifier reconstruction"
+    ],
+    "learnings": [
+      "Enforce typed identifier validation in destructive APIs and scripts",
+      "Build restoration automation for large-scale multi-service recovery",
+      "Preserve critical identifiers for easier restoration mapping"
+    ],
+    "sourceUrl": "https://www.atlassian.com/engineering/post-incident-review-april-2022-outage",
+    "sourceLabel": "Atlassian PIR",
+    "simulatorId": "sim-atlassian-sites-2022"
+  },
+  {
+    "id": "crowdstrike-windows-2024",
+    "title": "CrowdStrike Falcon Windows Sensor Content Incident",
+    "company": "CrowdStrike",
+    "industry": "Security",
+    "category": "Release",
+    "impact": "high",
+    "date": "2024-07-19",
+    "summary": "A Rapid Response Content configuration update passed validation with problematic data and caused Windows host crashes on impacted systems.",
+    "impactDetails": [
+      "Large-scale Windows endpoint instability",
+      "Emergency customer remediation workflows needed",
+      "Reverted channel content and host-by-host recovery"
+    ],
+    "learnings": [
+      "Treat dynamic content validation as production-critical control plane",
+      "Strengthen rollout gates and independent quality checks",
+      "Prepare offline and automated recovery pathways for endpoints"
+    ],
+    "sourceUrl": "https://www.crowdstrike.com/falcon-content-update-remediation-and-guidance-hub/",
+    "sourceLabel": "CrowdStrike guidance hub",
+    "simulatorId": "sim-crowdstrike-windows-2024"
+  },
+  {
+    "id": "gcp-filestore-2022",
+    "title": "Google Cloud Filestore Global API Throttling Incident",
+    "company": "Google Cloud",
+    "industry": "Cloud",
+    "category": "Quota",
+    "impact": "medium",
+    "date": "2022-09-13",
+    "summary": "An internal service malfunction overloaded Filestore APIs, triggering global throttling under a global quota design and breaking read-only API calls.",
+    "impactDetails": [
+      "Read-only API access failures across locations",
+      "Console and CLI list/get operations affected",
+      "Mutating operations largely continued but observability degraded"
+    ],
+    "learnings": [
+      "Avoid global choke points where regional isolation is expected",
+      "Pause offending internal traffic sources quickly",
+      "Improve quota saturation early warning and mitigation automation"
+    ],
+    "sourceUrl": "https://status.cloud.google.com/incidents/X8SNkK2BPyCrc1sveeiu",
+    "sourceLabel": "Google Cloud Service Health",
+    "simulatorId": "sim-gcp-filestore-2022"
+  },
+  {
+    "id": "gcp-service-control-2025",
+    "title": "Google Cloud Service Control Crash Loop Incident",
+    "company": "Google Cloud",
+    "industry": "Cloud",
+    "category": "Policy",
+    "impact": "high",
+    "date": "2025-06-12",
+    "summary": "A policy change with unintended blank fields exercised an unprotected code path in Service Control, causing global crash loops and broad API impact.",
+    "impactDetails": [
+      "Widespread 503/API failures across Google Cloud products",
+      "Global propagation from replicated policy metadata",
+      "Regional recovery variance with prolonged us-central1 effects"
+    ],
+    "learnings": [
+      "Feature-flag and error-handle all new control-plane paths",
+      "Use fast kill-switches for high-blast-radius policy logic",
+      "Plan recovery controls for thundering-herd restart behavior"
+    ],
+    "sourceUrl": "https://status.cloud.google.com/incidents/ow5i3PPK96RduMcb1SsW",
+    "sourceLabel": "Google Cloud Service Health",
+    "simulatorId": "sim-gcp-service-control-2025"
+  },
+  {
+    "id": "cloudflare-tokens-2023",
+    "title": "Cloudflare Service Token Metadata Incident",
+    "company": "Cloudflare",
+    "industry": "Networking",
+    "category": "Identity",
+    "impact": "medium",
+    "date": "2023-01-24",
+    "summary": "A release for service-token last-seen metadata overwrote token secrets for impacted internal accounts, causing authentication failures across multiple Cloudflare services.",
+    "impactDetails": [
+      "WARP and Zero Trust enrollment/authentication impact",
+      "Control-plane degradation for API-related products",
+      "Staggered impact due to token sync/update behavior"
+    ],
+    "learnings": [
+      "Never write back redacted reads without full-field integrity checks",
+      "Protect critical token fields with stronger constraints",
+      "Use layered restoration paths: immediate manual plus database recovery"
+    ],
+    "sourceUrl": "https://blog.cloudflare.com/cloudflare-incident-on-january-24th-2023/",
+    "sourceLabel": "Cloudflare postmortem",
+    "simulatorId": "sim-cloudflare-tokens-2023"
+  },
+  {
+    "id": "cloudflare-dnssec-2023",
+    "title": "Cloudflare 1.1.1.1 DNSSEC Lookup Failures",
+    "company": "Cloudflare",
+    "industry": "Networking",
+    "category": "DNS",
+    "impact": "medium",
+    "date": "2023-10-04",
+    "summary": "Resolver systems served from a stale root zone after parser failures on a newer root record type, leading to elevated SERVFAIL responses when signatures expired.",
+    "impactDetails": [
+      "Global but uneven SERVFAIL increase",
+      "Peak error rates concentrated in large POPs",
+      "Initial override attempt only partially effective before full stop of preloading"
+    ],
+    "learnings": [
+      "Monitor stale-root serving directly as a first-class SLO signal",
+      "Handle unknown record types and parser failures with safer fallback behavior",
+      "Validate mitigation paths under forwarded-query behavior"
+    ],
+    "sourceUrl": "https://blog.cloudflare.com/1-1-1-1-lookup-failures-on-october-4th-2023/",
+    "sourceLabel": "Cloudflare postmortem",
+    "simulatorId": "sim-cloudflare-dnssec-2023"
+  }
+]

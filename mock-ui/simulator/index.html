@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro Atlas - Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="app-shell page-shell">
+      <header class="topbar compact-topbar">
+        <div class="brand-block">
+          <div class="brand-dot"></div>
+          <div>
+            <h1>Incident Simulator</h1>
+            <p id="simContext">Practice response decisions and resolve the incident.</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <a id="simToIncident" class="ghost-btn link-btn" href="../">Open incident page</a>
+          <a class="ghost-btn link-btn" href="../">Back to incidents</a>
+          <button id="simRestart" class="solid-btn">Restart</button>
+        </div>
+      </header>
+
+      <main class="sim-layout single-page-sim">
+        <article class="sim-card">
+          <h2 id="simTitle">Scenario</h2>
+          <p id="simPrompt"></p>
+          <div id="simChoices" class="sim-choices"></div>
+          <div id="simChains" class="sim-outcome"></div>
+        </article>
+
+        <aside class="sim-meta">
+          <h3>Run Stats</h3>
+          <div class="sim-stats">
+            <p><span>Questions answered</span><strong id="statQuestions">0</strong></p>
+            <p><span>Detours taken</span><strong id="statDetours">0</strong></p>
+            <p><span>Signals found</span><strong id="statSignals">0</strong></p>
+          </div>
+          <div id="simSummary" class="sim-summary"></div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="../data-loader.js"></script>
+    <script src="../simulator.js"></script>
+  </body>
+</html>

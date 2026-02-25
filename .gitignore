@@ -1,0 +1,7 @@
+.DS_Store
+**/.DS_Store
+
+# Temporary/runtime files
+*.log
+.cache/
+.tmp/

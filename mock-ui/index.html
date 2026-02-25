@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro Atlas - Incidents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-dot"></div>
+          <div>
+            <h1>Retro Atlas</h1>
+            <p>Filter incidents and learn from historical failures</p>
+          </div>
+        </div>
+
+        <div class="search-wrap">
+          <input id="searchInput" type="search" placeholder="Search incident, company, or keyword..." />
+        </div>
+
+        <div class="top-actions"></div>
+      </header>
+
+      <main class="layout-grid">
+        <aside class="panel sidebar">
+          <section>
+            <h2>Filters</h2>
+
+            <label class="field-label" for="industryFilter">Industry</label>
+            <select id="industryFilter">
+              <option value="all">All industries</option>
+            </select>
+
+            <label class="field-label" for="categoryFilter">Category</label>
+            <select id="categoryFilter">
+              <option value="all">All categories</option>
+            </select>
+
+            <label class="field-label" for="impactFilter">Impact</label>
+            <select id="impactFilter">
+              <option value="all">All impact levels</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+
+            <label class="field-label" for="yearFilter">Year</label>
+            <select id="yearFilter">
+              <option value="all">All years</option>
+            </select>
+
+            <label class="field-label" for="sortBy">Sort</label>
+            <select id="sortBy">
+              <option value="date_desc">Newest first</option>
+              <option value="date_asc">Oldest first</option>
+              <option value="impact_desc">Highest impact</option>
+            </select>
+
+            <label class="field-label" for="pageSize">Page size</label>
+            <select id="pageSize">
+              <option value="5">5 per page</option>
+              <option value="10">10 per page</option>
+              <option value="20">20 per page</option>
+            </select>
+          </section>
+
+          <section class="legend-section">
+            <h3>Severity Legend</h3>
+            <div class="legend-item"><span class="sev sev-low"></span> Low</div>
+            <div class="legend-item"><span class="sev sev-medium"></span> Medium</div>
+            <div class="legend-item"><span class="sev sev-high"></span> High</div>
+          </section>
+        </aside>
+
+        <section class="panel center-column">
+          <div class="list-head">
+            <div>
+              <h2>Incidents</h2>
+              <p class="subtle" id="resultCount"></p>
+            </div>
+          </div>
+
+          <div id="incidentList" class="incident-list"></div>
+
+          <div class="pagination">
+            <button id="prevPage" class="ghost-btn">Previous</button>
+            <p id="pageMeta" class="page-meta"></p>
+            <button id="nextPage" class="ghost-btn">Next</button>
+          </div>
+        </section>
+
+        <aside class="panel detail-column">
+          <div id="detailEmpty" class="detail-empty">
+            <h2>Select an incident</h2>
+            <p>Choose any card to inspect details and continue to the full incident page or simulator.</p>
+          </div>
+
+          <article id="detailCard" class="detail-card hidden">
+            <div class="detail-top">
+              <p id="detailMeta" class="detail-meta"></p>
+              <h2 id="detailTitle"></h2>
+            </div>
+
+            <div class="detail-section">
+              <h3>What happened</h3>
+              <p id="detailSummary"></p>
+            </div>
+
+            <div class="detail-section">
+              <h3>Impact</h3>
+              <ul id="detailImpact"></ul>
+            </div>
+
+            <div class="detail-section">
+              <h3>Key learnings</h3>
+              <ul id="detailLearn"></ul>
+            </div>
+
+            <div class="detail-links">
+              <a id="detailSource" href="#" target="_blank" rel="noreferrer">Open original postmortem</a>
+              <a id="detailIncidentPage" href="#">Open incident page</a>
+              <a id="detailSimulator" href="#">Try simulator for this incident</a>
+            </div>
+          </article>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./data-loader.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

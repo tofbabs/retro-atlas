@@ -1,0 +1,332 @@
+{
+  "sim-aws-s3-2017": {
+    "incidentId": "aws-s3-2017",
+    "title": "S3 Regional API Failure",
+    "shortestPath": 4,
+    "openingPrompt": "A storage region shows broad API failures and dependent services are degrading. You are incident commander and must restore service safely.",
+    "canonicalResolution": [
+      {
+        "action": "Contain further capacity changes in affected S3 subsystems",
+        "rationale": "Stop additional state drift while impact expands.",
+        "outcome": "No new unintended removals occur; investigation can proceed on stable state."
+      },
+      {
+        "action": "Prioritize index subsystem restart and integrity checks",
+        "rationale": "Core object metadata path must be restored before broad API recovery.",
+        "outcome": "GET/LIST/DELETE paths begin partial recovery."
+      },
+      {
+        "action": "Recover placement subsystem after index readiness",
+        "rationale": "PUT path depends on placement plus healthy index state.",
+        "outcome": "Object write path returns as placement completes recovery."
+      },
+      {
+        "action": "Execute controlled downstream recovery and backlog drain",
+        "rationale": "Dependent services require staged recovery after S3 core restoration.",
+        "outcome": "Regional service health normalizes and cascading impacts clear."
+      }
+    ],
+    "distractors": [
+      "Scale unrelated edge services before stabilizing storage control paths",
+      "Run broad config changes during ongoing restart operations",
+      "Force immediate full traffic restoration without subsystem readiness checks"
+    ]
+  },
+  "sim-meta-backbone-2021": {
+    "incidentId": "meta-backbone-2021",
+    "title": "Backbone Disconnection and DNS Reachability Loss",
+    "shortestPath": 4,
+    "openingPrompt": "Multiple social products are globally unreachable and internal operational tools are degraded. You have limited remote access.",
+    "canonicalResolution": [
+      {
+        "action": "Confirm backbone control-plane disconnection scope",
+        "rationale": "Determine whether failure is global backbone vs single-region issue.",
+        "outcome": "Global network disconnection pattern is confirmed."
+      },
+      {
+        "action": "Dispatch onsite teams for out-of-band recovery operations",
+        "rationale": "Primary management paths are unavailable; physical intervention is required.",
+        "outcome": "Engineers regain the ability to modify network state in facilities."
+      },
+      {
+        "action": "Restore backbone connectivity before normal DNS/BGP behavior",
+        "rationale": "Authoritative reachability depends on healthy inter-datacenter paths.",
+        "outcome": "Core network paths return and service endpoints become reachable again."
+      },
+      {
+        "action": "Ramp traffic in controlled phases across data centers",
+        "rationale": "Avoid secondary instability from sudden traffic and cache pressure.",
+        "outcome": "Services return with controlled recovery instead of a second crash cycle."
+      }
+    ],
+    "distractors": [
+      "Focus only on application tier restarts while backbone remains disconnected",
+      "Force immediate global DNS re-advertisement without core path validation",
+      "Resume full user traffic before internal dependency health checks"
+    ]
+  },
+  "sim-fastly-global-2021": {
+    "incidentId": "fastly-global-2021",
+    "title": "Edge Error Surge from Config Trigger",
+    "shortestPath": 4,
+    "openingPrompt": "A CDN edge platform starts returning widespread errors within minutes. Customer impact is global.",
+    "canonicalResolution": [
+      {
+        "action": "Detect and isolate the triggering configuration condition",
+        "rationale": "Rapid narrowing prevents unnecessary broad rollback actions.",
+        "outcome": "Triggering customer config pattern is identified."
+      },
+      {
+        "action": "Disable the specific triggering configuration behavior",
+        "rationale": "Immediate mitigation restores service before root fix deploy.",
+        "outcome": "Network recovery begins across affected edge locations."
+      },
+      {
+        "action": "Monitor staged restoration to majority healthy status",
+        "rationale": "Verify that mitigation holds under returning traffic.",
+        "outcome": "Most services stabilize and status moves toward resolved."
+      },
+      {
+        "action": "Deploy permanent software fix for latent bug",
+        "rationale": "Long-term prevention requires code-level remediation after mitigation.",
+        "outcome": "Trigger class is removed from production behavior."
+      }
+    ],
+    "distractors": [
+      "Perform full-network restart before isolating trigger conditions",
+      "Change customer-facing cache policies globally without evidence",
+      "Delay mitigation while waiting for full postmortem certainty"
+    ]
+  },
+  "sim-gitlab-db-2017": {
+    "incidentId": "gitlab-db-2017",
+    "title": "Primary Database Data Loss Emergency",
+    "shortestPath": 4,
+    "openingPrompt": "Database stress incident escalates into major data path failure after an operator action. Production availability is lost.",
+    "canonicalResolution": [
+      {
+        "action": "Freeze destructive operations and assess surviving recovery assets",
+        "rationale": "Prevent additional data loss and establish viable restore options.",
+        "outcome": "Recovery plan converges on latest viable snapshot strategy."
+      },
+      {
+        "action": "Prepare staged restoration using freshest available LVM snapshot",
+        "rationale": "Minimize loss window compared with older backup alternatives.",
+        "outcome": "Core production data foundation is restored in controlled steps."
+      },
+      {
+        "action": "Recover critical supplemental data and reconcile identifiers",
+        "rationale": "Dependent records and sequences must be corrected before reopening traffic.",
+        "outcome": "Database consistency improves and duplicate-ID risks are reduced."
+      },
+      {
+        "action": "Gradually re-enable platform services with integrity validation",
+        "rationale": "Controlled ramp-up reduces risk of immediate relapse.",
+        "outcome": "Service returns while validated data state is maintained."
+      }
+    ],
+    "distractors": [
+      "Re-enable all application traffic before sequence reconciliation",
+      "Switch to the oldest backup immediately without evaluating newer snapshots",
+      "Parallelize unsafe manual DB edits during active restoration"
+    ]
+  },
+  "sim-atlassian-sites-2022": {
+    "incidentId": "atlassian-sites-2022",
+    "title": "Large-Scale Customer Site Deletion Recovery",
+    "shortestPath": 4,
+    "openingPrompt": "Support reports widespread customer site disappearance following an internal maintenance script run.",
+    "canonicalResolution": [
+      {
+        "action": "Correlate support alerts with recent deletion script execution",
+        "rationale": "Fast attribution is needed to stop additional destructive workflow risk.",
+        "outcome": "Deletion script is confirmed as incident trigger."
+      },
+      {
+        "action": "Form cross-product incident workstreams and define restoration model",
+        "rationale": "Recovery spans identities, product stores, metadata, and integrations.",
+        "outcome": "Manual and automation streams begin restoration safely."
+      },
+      {
+        "action": "Execute restoration batches with validated sequencing",
+        "rationale": "Site re-creation/re-mapping must follow coordinated data dependencies.",
+        "outcome": "Restoration 1 recovers initial customer cohorts."
+      },
+      {
+        "action": "Shift to accelerated restoration path with higher parallelism",
+        "rationale": "Scale restoration throughput while preserving data consistency.",
+        "outcome": "Remaining sites recover on accelerated timeline to full restoration."
+      }
+    ],
+    "distractors": [
+      "Retry the original script with adjusted IDs during active incident",
+      "Restore product databases before core site identity state exists",
+      "Skip customer validation after automated restoration batches"
+    ]
+  },
+  "sim-crowdstrike-windows-2024": {
+    "incidentId": "crowdstrike-windows-2024",
+    "title": "Endpoint Crash Incident from Content Update",
+    "shortestPath": 4,
+    "openingPrompt": "After a security content release, many Windows endpoints fail to remain stable. Enterprises report widespread disruption.",
+    "canonicalResolution": [
+      {
+        "action": "Identify offending content release channel and timestamp window",
+        "rationale": "Precise scoping is required for immediate containment and remediation.",
+        "outcome": "Problematic channel file version is isolated."
+      },
+      {
+        "action": "Revert faulty content update in distribution pipeline",
+        "rationale": "Stop further propagation of crash-inducing content.",
+        "outcome": "Newly updating hosts receive known-good content version."
+      },
+      {
+        "action": "Prioritize host recovery runbooks for already-impacted systems",
+        "rationale": "Hosts unable to stay online need guided recovery paths.",
+        "outcome": "Organizations begin structured endpoint recovery across fleets."
+      },
+      {
+        "action": "Publish validated remediation guidance and recovery tooling",
+        "rationale": "Consistent customer execution reduces prolonged outage risk.",
+        "outcome": "Recovery completion accelerates and incident stabilizes."
+      }
+    ],
+    "distractors": [
+      "Delay rollback while collecting complete ecosystem impact metrics",
+      "Assume non-Windows hosts need identical remediation sequence",
+      "Push new detection content before stabilizing reverted channel rollout"
+    ]
+  },
+  "sim-gcp-filestore-2022": {
+    "incidentId": "gcp-filestore-2022",
+    "title": "Global Filestore API Throttling",
+    "shortestPath": 4,
+    "openingPrompt": "Read-only management APIs for a storage product are failing globally with throttling behavior.",
+    "canonicalResolution": [
+      {
+        "action": "Verify shared global quota path saturation",
+        "rationale": "Differentiate local service fault from global quota exhaustion.",
+        "outcome": "Global throttling behavior is confirmed across regions."
+      },
+      {
+        "action": "Trace and isolate internal request flood source",
+        "rationale": "Mitigation requires reducing upstream overload pressure.",
+        "outcome": "Malfunctioning internal service is identified."
+      },
+      {
+        "action": "Pause/limit offending internal traffic",
+        "rationale": "Throttle relief is required for API control-plane recovery.",
+        "outcome": "Throttle pressure drops and API availability improves."
+      },
+      {
+        "action": "Validate full read-only API recovery and monitor residual errors",
+        "rationale": "Ensure recovery is global and stable before closure.",
+        "outcome": "Service returns and incident is resolved."
+      }
+    ],
+    "distractors": [
+      "Scale customer-facing frontends without reducing upstream overload",
+      "Retry all blocked API calls globally at once",
+      "Defer mitigation until quota redesign plan is finalized"
+    ]
+  },
+  "sim-gcp-service-control-2025": {
+    "incidentId": "gcp-service-control-2025",
+    "title": "Service Control Crash Loop and API Disruption",
+    "shortestPath": 4,
+    "openingPrompt": "Multiple cloud APIs begin returning elevated errors across regions after a control-plane policy update.",
+    "canonicalResolution": [
+      {
+        "action": "Correlate failure onset with recent policy propagation event",
+        "rationale": "Global simultaneous errors suggest replicated control metadata trigger.",
+        "outcome": "Policy-triggered failure path in control plane is suspected."
+      },
+      {
+        "action": "Identify crashing path in Service Control binaries",
+        "rationale": "Need precise fault location to apply safe disable controls.",
+        "outcome": "Null-pointer crash-loop path is confirmed."
+      },
+      {
+        "action": "Activate red-button to disable failing policy-serving path",
+        "rationale": "Fast kill switch limits blast radius while binaries stabilize.",
+        "outcome": "Regional recovery begins, then expands globally."
+      },
+      {
+        "action": "Coordinate product-level residual recovery, especially in lagging region",
+        "rationale": "Infrastructure recovery and product recovery complete at different rates.",
+        "outcome": "Residual impact clears and incident closes."
+      }
+    ],
+    "distractors": [
+      "Redeploy unchanged binaries globally before disabling failing code path",
+      "Treat as isolated regional outage and skip global policy rollback checks",
+      "Run aggressive restart cycles without herd-protection controls"
+    ]
+  },
+  "sim-cloudflare-tokens-2023": {
+    "incidentId": "cloudflare-tokens-2023",
+    "title": "Service Token Authentication Degradation",
+    "shortestPath": 4,
+    "openingPrompt": "Authentication-dependent internal services begin failing after a recent control-plane release.",
+    "canonicalResolution": [
+      {
+        "action": "Identify release-related token metadata corruption pattern",
+        "rationale": "Scope affected auth objects before broad remediation.",
+        "outcome": "Overwritten token-secret metadata is detected on impacted accounts."
+      },
+      {
+        "action": "Roll back release and block additional metadata writes",
+        "rationale": "Containment must stop ongoing corruption quickly.",
+        "outcome": "No further token corruption occurs."
+      },
+      {
+        "action": "Manually restore critical internal service tokens",
+        "rationale": "Immediate product recovery needs targeted token restoration.",
+        "outcome": "Major affected services recover from immediate auth failures."
+      },
+      {
+        "action": "Restore all impacted token records from database backup",
+        "rationale": "Complete data-level restoration is needed for full closure.",
+        "outcome": "Remaining account token integrity is recovered and incident ends."
+      }
+    ],
+    "distractors": [
+      "Rotate all customer-facing credentials before confirming impact scope",
+      "Restart unrelated data-plane services without token restoration",
+      "Proceed with release rollout while investigating partial alerts"
+    ]
+  },
+  "sim-cloudflare-dnssec-2023": {
+    "incidentId": "cloudflare-dnssec-2023",
+    "title": "Resolver SERVFAIL Increase from Stale Root Zone",
+    "shortestPath": 4,
+    "openingPrompt": "Resolver error rates rise with elevated SERVFAIL responses across major locations. DNSSEC validation failures are suspected.",
+    "canonicalResolution": [
+      {
+        "action": "Confirm stale root-zone dependency and signature-expiry linkage",
+        "rationale": "Need to validate stale-source behavior before mitigation selection.",
+        "outcome": "Outdated root zone and validation failures are confirmed."
+      },
+      {
+        "action": "Attempt scoped override to avoid stale-root responses",
+        "rationale": "Initial mitigation path tests whether static serving can be bypassed safely.",
+        "outcome": "Partial mitigation exposes forwarding-path gap."
+      },
+      {
+        "action": "Disable problematic root-zone preloading behavior completely",
+        "rationale": "Full stop required when partial override does not propagate correctly.",
+        "outcome": "SERVFAIL rates return toward normal quickly."
+      },
+      {
+        "action": "Close incident after validation and add stale-root observability controls",
+        "rationale": "Prevent recurrence through direct stale-data detection and alerting.",
+        "outcome": "Incident closes with follow-up hardening plan in place."
+      }
+    ],
+    "distractors": [
+      "Treat elevated SERVFAIL as only external-authoritative instability",
+      "Restart resolver fleet globally before isolating stale-root path",
+      "Modify cache TTL policy without fixing root-zone loading path"
+    ]
+  }
+}
