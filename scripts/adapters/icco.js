@@ -1,4 +1,5 @@
 const axios = require('axios');
+const crypto = require('crypto');
 const yaml = require('js-yaml');
 
 const ICCO_REPO_API = 'https://api.github.com/repos/icco/postmortems/contents/data';
@@ -45,7 +46,7 @@ async function fetchIcco() {
 }
 
 function generateId(company, url) {
-  const hash = Buffer.from(url || 'unknown').toString('hex').substring(0, 8);
+  const hash = crypto.createHash('sha256').update(url || 'unknown').digest('hex').substring(0, 8);
   return `${company.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${hash}`;
 }
 
