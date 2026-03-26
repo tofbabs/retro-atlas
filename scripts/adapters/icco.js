@@ -64,6 +64,12 @@ async function fetchIcco() {
       const parts = content.split('---');
       if (parts.length >= 3) {
         const frontmatter = parseFrontmatter(parts[1]);
+
+        if (!frontmatter || typeof frontmatter !== 'object' || Object.keys(frontmatter).length === 0) {
+          console.warn(`Skipping malformed file ${file.name}: could not parse frontmatter`);
+          continue;
+        }
+
         const body = parts.slice(2).join('---').trim();
 
         incidents.push({
