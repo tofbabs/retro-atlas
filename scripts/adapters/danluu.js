@@ -1,10 +1,11 @@
 const axios = require('axios');
+// Using Node's built-in fetch; no external HTTP client required.
 
 const DANLUU_URL = 'https://raw.githubusercontent.com/danluu/post-mortems/master/README.md';
 
 async function fetchDanLuu() {
-  const response = await axios.get(DANLUU_URL);
-  const markdown = response.data;
+  const response = await fetch(DANLUU_URL);
+  const markdown = await response.text();
 
   const incidents = [];
   const lines = markdown.split('\n');
@@ -32,10 +33,13 @@ async function fetchDanLuu() {
       }
       i = j - 1;
 
+      const rawCompany = company.trim();
+      const displayCompany = rawCompany || 'Unknown';
+
       incidents.push({
-        id: `danluu-${generateId(company, sourceUrl)}`,
-        title: `${company} Incident`,
-        company: company,
+        id: `danluu-${generateId(displayCompany, sourceUrl)}`,
+        title: `${displayCompany} Incident`,
+        company: displayCompany,
         industry: 'Tech',
         category: currentCategory || 'General',
         impact: 'medium',
@@ -53,7 +57,7 @@ async function fetchDanLuu() {
 }
 
 function generateId(company, url) {
-  const hash = Buffer.from(url).toString('hex').substring(0, 8);
+  const hash = crypto.createHash('sha256').update(url || 'unknown').digest('hex').slice(0, 8);
   return `${company.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${hash}`;
 }
 

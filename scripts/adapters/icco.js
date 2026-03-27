@@ -1,91 +1,70 @@
+const axios = require('axios');
+const crypto = require('crypto');
+const yaml = require('js-yaml');
+const crypto = require('crypto');
+
 const ICCO_REPO_API = 'https://api.github.com/repos/icco/postmortems/contents/data';
 
-function parseFrontmatter(frontmatterText) {
-  const result = {};
-
-  if (!frontmatterText || typeof frontmatterText !== 'string') {
-    return result;
-  }
-
-  const lines = frontmatterText.split('\n');
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('#')) {
-      continue;
-    }
-
-    const separatorIndex = line.indexOf(':');
-    if (separatorIndex === -1) {
-      continue;
-    }
-
-    const key = line.slice(0, separatorIndex).trim();
-    let value = line.slice(separatorIndex + 1).trim();
-
-    // Handle simple comma-separated lists, e.g. "categories: foo, bar"
-    if (value.includes(',')) {
-      result[key] = value
-        .split(',')
-        .map(v => v.trim())
-        .filter(Boolean);
-    } else {
-      // Strip surrounding quotes if present
-      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-        value = value.slice(1, -1);
-      }
-      result[key] = value;
-    }
-  }
-
-  return result;
-}
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_REQUEST_HEADERS = Object.assign(
+  {
+    'User-Agent': 'retro-atlas-ingest',
+    'Accept': 'application/vnd.github.v3+json'
+  },
+  GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}
+);
 
 async function fetchIcco() {
   try {
-    const response = await fetch(ICCO_REPO_API);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ICCO repo index: ${response.status} ${response.statusText}`);
-    }
-    const files = await response.json();
+    const response = await axios.get(ICCO_REPO_API, { headers: GITHUB_REQUEST_HEADERS });
+    const files = response.data;
 
     const incidents = [];
-    const filesToFetch = files.filter(f => f.name.endsWith('.md')).slice(0, 20);
+    const markdownFiles = files.filter(f => f.name.endsWith('.md'));
+
+    const maxFilesEnv = process.env.ICCO_MAX_FILES;
+    const maxFiles = maxFilesEnv ? parseInt(maxFilesEnv, 10) : 20;
+
+    let filesToFetch = markdownFiles;
+    if (maxFiles && maxFiles > 0 && markdownFiles.length > maxFiles) {
+      console.log(`ICCO adapter limiting fetched markdown files to ${maxFiles} of ${markdownFiles.length}.`);
+      filesToFetch = markdownFiles.slice(0, maxFiles);
+    }
 
     for (const file of filesToFetch) {
-      const fileRes = await fetch(file.download_url);
-      if (!fileRes.ok) {
-        // Skip files that fail to download, but continue processing others
-        console.error(`Failed to fetch file ${file.name}: ${fileRes.status} ${fileRes.statusText}`);
-        continue;
-      }
-      const content = await fileRes.text();
+      try {
+        const fileRes = await axios.get(file.download_url, { headers: GITHUB_REQUEST_HEADERS });
+        const content = fileRes.data;
 
-      const parts = content.split('---');
-      if (parts.length >= 3) {
-        const frontmatter = parseFrontmatter(parts[1]);
+        const parts = content.split('---');
+        if (parts.length >= 3) {
+          const frontmatter = yaml.load(parts[1]);
+          if (!frontmatter || typeof frontmatter !== 'object') {
+            console.warn(`Skipping malformed frontmatter in ${file.name}`);
+            continue;
+          }
 
-        if (!frontmatter || typeof frontmatter !== 'object' || Object.keys(frontmatter).length === 0) {
-          console.warn(`Skipping malformed file ${file.name}: could not parse frontmatter`);
-          continue;
+          const body = parts.slice(2).join('---').trim();
+          const rawCompany = (frontmatter.company || '').trim();
+          const company = rawCompany || 'Unknown';
+
+          incidents.push({
+            id: `icco-${frontmatter.uuid || generateId(company, frontmatter.url)}`,
+            title: frontmatter.product ? `${company} - ${frontmatter.product}` : `${company} Incident`,
+            company: company,
+            industry: 'Tech',
+            category: (frontmatter.categories && frontmatter.categories[0]) || 'General',
+            impact: 'medium',
+            date: frontmatter.date || extractDate(body) || '2000-01-01',
+            summary: body || 'Summary unavailable',
+            impactDetails: [],
+            learnings: [],
+            sourceUrl: frontmatter.url || file.html_url,
+            sourceLabel: 'icco/postmortems'
+          });
         }
-
-        const body = parts.slice(2).join('---').trim();
-
-        incidents.push({
-          id: `icco-${frontmatter.uuid || generateId(frontmatter.company || 'Unknown', frontmatter.url)}`,
-          title: frontmatter.product ? `${frontmatter.company} - ${frontmatter.product}` : `${frontmatter.company} Incident`,
-          company: frontmatter.company || 'Unknown',
-          industry: 'Tech',
-          category: (frontmatter.categories && frontmatter.categories[0]) || 'General',
-          impact: 'medium',
-          date: frontmatter.date || extractDate(body) || '2000-01-01',
-          summary: body || 'Summary unavailable',
-          impactDetails: [],
-          learnings: [],
-          sourceUrl: frontmatter.url || 'https://github.com/icco/postmortems',
-          sourceLabel: 'icco/postmortems'
-        });
+      } catch (fileError) {
+        console.error(`Error fetching file ${file.name}:`, fileError.message);
       }
     }
 
@@ -97,7 +76,7 @@ async function fetchIcco() {
 }
 
 function generateId(company, url) {
-  const hash = Buffer.from(url || 'unknown').toString('hex').substring(0, 8);
+  const hash = crypto.createHash('sha256').update(url || 'unknown').digest('hex').slice(0, 8);
   return `${company.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${hash}`;
 }
 
