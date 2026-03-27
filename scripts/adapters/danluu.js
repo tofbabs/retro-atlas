@@ -1,11 +1,11 @@
 const axios = require('axios');
-const crypto = require('crypto');
+// Using Node's built-in fetch; no external HTTP client required.
 
 const DANLUU_URL = 'https://raw.githubusercontent.com/danluu/post-mortems/master/README.md';
 
 async function fetchDanLuu() {
-  const response = await axios.get(DANLUU_URL);
-  const markdown = response.data;
+  const response = await fetch(DANLUU_URL);
+  const markdown = await response.text();
 
   const incidents = [];
   const lines = markdown.split('\n');
